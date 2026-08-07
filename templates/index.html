@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Analyzer</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #111827;
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #d1d5db;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 250px;
+            padding: 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            resize: vertical;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 14px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+
+        .score {
+            font-size: 40px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .skill {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+
+        .recommendation {
+            margin-top: 20px;
+            padding: 15px;
+            background: #ecfdf5;
+            border-radius: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>🤖 AI Resume Analyzer</h1>
+        <p>Analyze your resume and improve your ATS compatibility</p>
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+
+            <h2>Resume Analysis</h2>
+            <p style="margin-top: 8px;">
+                Paste your resume text below to analyze your technical skills.
+            </p>
+
+            <form method="POST">
+
+                <textarea
+                    name="resume_text"
+                    placeholder="Paste your resume text here..."
+                    required></textarea>
+
+                <button type="submit">
+                    Analyze Resume 🚀
+                </button>
+
+            </form>
+
+            {% if result %}
+
+            <div class="result">
+
+                <h2>Analysis Result</h2>
+
+                <div class="score">
+                    ATS Skill Score: {{ result.score }}%
+                </div>
+
+                <h3>Detected Skills</h3>
+
+                <div class="skills">
+                    {% if result.skills %}
+                        {% for skill in result.skills %}
+                            <span class="skill">{{ skill }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <p>No matching skills detected.</p>
+                    {% endif %}
+                </div>
+
+                <div class="recommendation">
+                    <strong>💡 Recommendation:</strong>
+                    <p style="margin-top: 8px;">
+                        {{ result.recommendation }}
+                    </p>
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <footer>
+        AI Resume Analyzer | Built with Python & Flask
+    </footer>
+
+</body>
+</html>
