@@ -1,125 +1,965 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Resume Analyzer Pro</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Inter,Arial,sans-serif;background:#f4f7fb;color:#172033;min-height:100vh}
-.header{background:linear-gradient(135deg,#111827,#243b63);color:white;padding:42px 20px;text-align:center}
-.header h1{font-size:clamp(28px,5vw,44px);margin-bottom:10px}.header p{color:#d8e0ee}
-.container{max-width:1050px;margin:30px auto;padding:0 18px}
-.card{background:#fff;padding:28px;border-radius:18px;box-shadow:0 8px 30px rgba(20,30,50,.08);margin-bottom:22px}
-label{display:block;font-weight:700;margin:0 0 8px}
-select,textarea,input[type=file]{width:100%;padding:13px;border:1px solid #d7deea;border-radius:10px;font-size:15px;margin-bottom:16px}
-textarea{min-height:230px;resize:vertical}
-button{width:100%;padding:14px;border:0;border-radius:10px;background:#2563eb;color:#fff;font-size:17px;font-weight:700;cursor:pointer}
-button:hover{background:#1d4ed8}
-.upload{border:2px dashed #b9c7df;padding:18px;border-radius:12px;text-align:center;margin-bottom:18px;background:#f8fafc}
-.error{padding:14px;background:#fee2e2;color:#991b1b;border-radius:10px;margin-bottom:20px}
-.result-head{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
-.score{width:135px;height:135px;border-radius:50%;display:grid;place-items:center;background:#eff6ff;border:10px solid #2563eb;color:#1d4ed8;font-size:34px;font-weight:800}
-.verdict{font-size:26px;font-weight:800}.muted{color:#64748b}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:22px}
-.metric{padding:18px;border:1px solid #e5eaf2;border-radius:13px}
-.metric strong{font-size:25px;display:block;margin-top:5px}
-.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.tag{padding:8px 12px;border-radius:20px;background:#dbeafe;color:#1e40af;font-weight:700;font-size:14px}
-.tag.missing{background:#fee2e2;color:#991b1b}
-ul{padding-left:20px;margin-top:12px}li{margin:9px 0}
-.section-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #edf0f5}
-.ok{color:#15803d;font-weight:700}.bad{color:#b91c1c;font-weight:700}
-.footer{text-align:center;padding:25px;color:#64748b}
-@media(max-width:700px){.grid{grid-template-columns:1fr}.card{padding:20px}.header{padding:32px 15px}.score{width:110px;height:110px;font-size:28px}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Resume Analyzer Pro</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+            min-height: 100vh;
+        }
+
+        /* ================= HEADER ================= */
+
+        .header {
+            background: linear-gradient(
+                135deg,
+                #111827,
+                #1e3a8a,
+                #2563eb
+            );
+
+            color: white;
+            padding: 55px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: clamp(30px, 5vw, 48px);
+            margin-bottom: 12px;
+            font-weight: 800;
+        }
+
+        .header p {
+            color: #dbeafe;
+            font-size: 17px;
+        }
+
+        .badge {
+            display: inline-block;
+            margin-bottom: 18px;
+            padding: 7px 14px;
+            border-radius: 30px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 13px;
+        }
+
+        /* ================= CONTAINER ================= */
+
+        .container {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 18px;
+        }
+
+        /* ================= CARD ================= */
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 30px rgba(20,30,50,.08);
+            margin-bottom: 22px;
+        }
+
+        .card h2 {
+            margin-bottom: 7px;
+        }
+
+        /* ================= TEXT ================= */
+
+        .muted {
+            color: #64748b;
+        }
+
+        /* ================= FORM ================= */
+
+        label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        select,
+        textarea,
+        input[type=file] {
+
+            width: 100%;
+            padding: 13px;
+
+            border: 1px solid #d7deea;
+            border-radius: 10px;
+
+            font-size: 15px;
+
+            margin-bottom: 18px;
+
+            background: white;
+        }
+
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+        }
+
+        textarea {
+            min-height: 250px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        /* ================= UPLOAD ================= */
+
+        .upload {
+
+            border: 2px dashed #b9c7df;
+
+            padding: 25px;
+
+            border-radius: 14px;
+
+            text-align: center;
+
+            margin-bottom: 20px;
+
+            background: #f8fafc;
+
+            transition: .2s;
+        }
+
+        .upload:hover {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .upload-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        /* ================= BUTTON ================= */
+
+        button {
+
+            width: 100%;
+
+            padding: 15px;
+
+            border: 0;
+
+            border-radius: 10px;
+
+            background: linear-gradient(
+                135deg,
+                #2563eb,
+                #1d4ed8
+            );
+
+            color: white;
+
+            font-size: 17px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: .2s;
+        }
+
+        button:hover {
+
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 8px 20px rgba(37,99,235,.25);
+        }
+
+        /* ================= ERROR ================= */
+
+        .error {
+
+            padding: 15px;
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+            border-radius: 10px;
+
+            margin-bottom: 20px;
+
+            font-weight: 600;
+        }
+
+        /* ================= RESULT HEADER ================= */
+
+        .result-head {
+
+            display: flex;
+
+            gap: 25px;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+        }
+
+        .score {
+
+            width: 145px;
+
+            height: 145px;
+
+            border-radius: 50%;
+
+            display: grid;
+
+            place-items: center;
+
+            background: #eff6ff;
+
+            border: 10px solid #2563eb;
+
+            color: #1d4ed8;
+
+            font-size: 36px;
+
+            font-weight: 800;
+
+            flex-shrink: 0;
+        }
+
+        .verdict {
+
+            font-size: 28px;
+
+            font-weight: 800;
+
+            margin-bottom: 7px;
+        }
+
+        /* ================= METRICS ================= */
+
+        .grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+
+            margin-top: 25px;
+        }
+
+        .metric {
+
+            padding: 20px;
+
+            border: 1px solid #e5eaf2;
+
+            border-radius: 13px;
+
+            background: #fafcff;
+        }
+
+        .metric-title {
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .metric strong {
+
+            font-size: 26px;
+
+            display: block;
+
+            margin-top: 6px;
+
+            color: #172033;
+        }
+
+        /* ================= TAGS ================= */
+
+        .tags {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 9px;
+
+            margin-top: 14px;
+        }
+
+        .tag {
+
+            padding: 8px 13px;
+
+            border-radius: 20px;
+
+            background: #dbeafe;
+
+            color: #1e40af;
+
+            font-weight: 700;
+
+            font-size: 14px;
+        }
+
+        .tag.missing {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+        .tag.success {
+
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+        /* ================= SECTION CHECK ================= */
+
+        .section-row {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            padding: 13px 0;
+
+            border-bottom: 1px solid #edf0f5;
+        }
+
+        .section-row:last-child {
+            border-bottom: none;
+        }
+
+        .ok {
+
+            color: #15803d;
+
+            font-weight: 700;
+        }
+
+        .bad {
+
+            color: #b91c1c;
+
+            font-weight: 700;
+        }
+
+        /* ================= RECOMMENDATIONS ================= */
+
+        ul {
+
+            padding-left: 20px;
+
+            margin-top: 15px;
+        }
+
+        li {
+
+            margin: 12px 0;
+
+            line-height: 1.5;
+        }
+
+        .recommendation {
+
+            background: #eff6ff;
+
+            border-left: 5px solid #2563eb;
+
+            padding: 18px;
+
+            border-radius: 10px;
+
+            margin-top: 15px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        .footer {
+
+            text-align: center;
+
+            padding: 30px;
+
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width: 850px) {
+
+            .grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+        @media(max-width: 600px) {
+
+            .header {
+                padding: 40px 15px;
+            }
+
+            .header h1 {
+                font-size: 30px;
+            }
+
+            .container {
+                margin: 20px auto;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .score {
+                width: 115px;
+                height: 115px;
+                font-size: 28px;
+            }
+
+            .verdict {
+                font-size: 23px;
+            }
+
+        }
+
+    </style>
+
 </head>
+
+
 <body>
+
+
+<!-- ================= HEADER ================= -->
+
 <header class="header">
-<h1>🤖 AI Resume Analyzer Pro</h1>
-<p>ATS compatibility • Skill gap analysis • Career recommendations</p>
+
+    <div class="badge">
+        🚀 AI-Powered Career Tool
+    </div>
+
+    <h1>
+        🤖 AI Resume Analyzer Pro
+    </h1>
+
+    <p>
+        ATS Compatibility • Skill Gap Analysis • Career Recommendations
+    </p>
+
 </header>
 
+
+
 <main class="container">
+
+
+<!-- ================= INPUT CARD ================= -->
+
 <div class="card">
-<h2>Analyze Your Resume</h2>
-<p class="muted" style="margin:8px 0 20px">Choose a target role and paste your resume or upload a PDF/DOCX/TXT file.</p>
 
-{% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <h2>
+        📄 Analyze Your Resume
+    </h2>
 
-<form method="POST" enctype="multipart/form-data">
-<label for="role">Target Job Role</label>
-<select name="role" id="role">
-{% for r in ["Data Analyst","Web Developer","Python Developer","Software Developer","ML Engineer"] %}
-<option value="{{r}}" {% if result and result.role==r %}selected{% endif %}>{{r}}</option>
-{% endfor %}
-</select>
+    <p
+        class="muted"
+        style="margin:8px 0 22px"
+    >
+        Select your target job role and upload your resume
+        or paste your resume text below.
+    </p>
 
-<div class="upload">
-<label for="resume_file">📄 Upload Resume</label>
-<input type="file" id="resume_file" name="resume_file" accept=".pdf,.docx,.txt">
-<small class="muted">PDF, DOCX or TXT</small>
+
+    {% if error %}
+
+    <div class="error">
+        ⚠️ {{ error }}
+    </div>
+
+    {% endif %}
+
+
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+    >
+
+
+        <!-- ROLE -->
+
+        <label for="role">
+            🎯 Target Job Role
+        </label>
+
+        <select
+            name="role"
+            id="role"
+        >
+
+            {% for r in [
+                "Data Analyst",
+                "Web Developer",
+                "Python Developer",
+                "Software Developer",
+                "ML Engineer"
+            ] %}
+
+            <option
+                value="{{ r }}"
+                {% if role == r %}
+                selected
+                {% endif %}
+            >
+                {{ r }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        <!-- FILE UPLOAD -->
+
+        <div class="upload">
+
+            <div class="upload-icon">
+                📄
+            </div>
+
+            <label for="resume_file">
+                Upload Resume
+            </label>
+
+            <input
+                type="file"
+                id="resume_file"
+                name="resume_file"
+                accept=".pdf,.docx,.txt"
+            >
+
+            <small class="muted">
+                Supported formats: PDF, DOCX and TXT
+            </small>
+
+        </div>
+
+
+        <!-- TEXT -->
+
+        <label for="resume_text">
+            📝 Or Paste Resume Text
+        </label>
+
+        <textarea
+            id="resume_text"
+            name="resume_text"
+            placeholder="Paste your complete resume here..."
+        >{{ resume_text }}</textarea>
+
+
+        <button type="submit">
+            🚀 Analyze Resume
+        </button>
+
+
+    </form>
+
 </div>
 
-<label for="resume_text">Or Paste Resume Text</label>
-<textarea id="resume_text" name="resume_text" placeholder="Paste your complete resume here...">{{ resume_text }}</textarea>
-<button type="submit">🚀 Analyze Resume</button>
-</form>
-</div>
+
 
 {% if result %}
-<div class="card">
-<div class="result-head">
-<div class="score">{{ result.ats_score }}%</div>
-<div>
-<div class="verdict">{{ result.verdict }}</div>
-<p class="muted">ATS-style score for <strong>{{ result.role }}</strong></p>
-<p class="muted">{{ result.word_count }} words analyzed</p>
-</div>
-</div>
 
-<div class="grid">
-<div class="metric">Role Match<strong>{{ result.role_score }}%</strong></div>
-<div class="metric">Overall Skill Coverage<strong>{{ result.skill_score }}%</strong></div>
-</div>
-</div>
+
+<!-- ================= ATS RESULT ================= -->
 
 <div class="card">
-<h2>🎯 Role Skill Analysis</h2>
-<p class="muted" style="margin-top:7px">Skills matched to your selected career role.</p>
-<h3 style="margin-top:20px">Matched Skills</h3>
-<div class="tags">
-{% for skill in result.matched %}<span class="tag">✓ {{ skill }}</span>{% else %}<span class="muted">No target skills detected yet.</span>{% endfor %}
-</div>
-<h3 style="margin-top:20px">Missing / Recommended Skills</h3>
-<div class="tags">
-{% for skill in result.missing %}<span class="tag missing">+ {{ skill }}</span>{% else %}<span class="tag">Great coverage!</span>{% endfor %}
-</div>
+
+    <h2>
+        📊 Resume Analysis Result
+    </h2>
+
+    <p
+        class="muted"
+        style="margin-top:7px;margin-bottom:25px"
+    >
+        AI-powered ATS-style evaluation of your resume.
+    </p>
+
+
+    <div class="result-head">
+
+
+        <div class="score">
+            {{ result.ats_score }}%
+        </div>
+
+
+        <div>
+
+            <div class="verdict">
+                {{ result.verdict }}
+            </div>
+
+            <p class="muted">
+                Target Role:
+                <strong>
+                    {{ result.role }}
+                </strong>
+            </p>
+
+            <p class="muted">
+                {{ result.word_count }}
+                words analyzed
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- METRICS -->
+
+    <div class="grid">
+
+
+        <div class="metric">
+
+            <span class="metric-title">
+                🎯 Role Match
+            </span>
+
+            <strong>
+                {{ result.role_score }}%
+            </strong>
+
+        </div>
+
+
+        <div class="metric">
+
+            <span class="metric-title">
+                🧠 Skill Coverage
+            </span>
+
+            <strong>
+                {{ result.skill_score }}%
+            </strong>
+
+        </div>
+
+
+        <div class="metric">
+
+            <span class="metric-title">
+                📋 Section Score
+            </span>
+
+            <strong>
+                {{ result.section_score }}%
+            </strong>
+
+        </div>
+
+
+        <div class="metric">
+
+            <span class="metric-title">
+                📝 Resume Length
+            </span>
+
+            <strong>
+                {{ result.length_score }}%
+            </strong>
+
+        </div>
+
+
+    </div>
+
 </div>
 
-<div class="card">
-<h2>🧠 Detected Technical Skills</h2>
-<div class="tags">
-{% for skill in result.skills %}<span class="tag">{{ skill }}</span>{% else %}<span class="muted">No supported technical skills detected.</span>{% endfor %}
-</div>
-</div>
+
+
+<!-- ================= ROLE SKILLS ================= -->
 
 <div class="card">
-<h2>📋 Resume Section Check</h2>
-{% for name, present in result.sections.items() %}
-<div class="section-row"><span>{{ name }}</span><span class="{{ 'ok' if present else 'bad' }}">{{ '✓ Present' if present else '✗ Missing' }}</span></div>
-{% endfor %}
+
+    <h2>
+        🎯 Role Skill Analysis
+    </h2>
+
+    <p
+        class="muted"
+        style="margin-top:7px"
+    >
+        Skills compared with the requirements of your selected role.
+    </p>
+
+
+    <h3 style="margin-top:22px">
+        ✅ Matched Skills
+    </h3>
+
+
+    <div class="tags">
+
+        {% for skill in result.matched %}
+
+        <span class="tag success">
+            ✓ {{ skill }}
+        </span>
+
+        {% else %}
+
+        <span class="muted">
+            No target skills detected yet.
+        </span>
+
+        {% endfor %}
+
+    </div>
+
+
+
+    <h3 style="margin-top:25px">
+        ❌ Missing / Recommended Skills
+    </h3>
+
+
+    <div class="tags">
+
+        {% for skill in result.missing %}
+
+        <span class="tag missing">
+            + {{ skill }}
+        </span>
+
+        {% else %}
+
+        <span class="tag success">
+            🎉 Great skill coverage!
+        </span>
+
+        {% endfor %}
+
+    </div>
+
 </div>
 
+
+
+<!-- ================= DETECTED SKILLS ================= -->
+
 <div class="card">
-<h2>💡 Personalized Recommendations</h2>
-<ul>
-{% for item in result.suggestions %}<li>{{ item }}</li>{% endfor %}
-</ul>
+
+    <h2>
+        🧠 Detected Technical Skills
+    </h2>
+
+    <p
+        class="muted"
+        style="margin-top:7px"
+    >
+        Technical skills identified from your resume.
+    </p>
+
+
+    <div class="tags">
+
+        {% for skill in result.skills %}
+
+        <span class="tag">
+            {{ skill }}
+        </span>
+
+        {% else %}
+
+        <span class="muted">
+            No supported technical skills detected.
+        </span>
+
+        {% endfor %}
+
+    </div>
+
 </div>
+
+
+
+<!-- ================= SECTION CHECK ================= -->
+
+<div class="card">
+
+    <h2>
+        📋 Resume Section Check
+    </h2>
+
+    <p
+        class="muted"
+        style="margin-top:7px;margin-bottom:12px"
+    >
+        Important resume sections detected by the analyzer.
+    </p>
+
+
+    {% for name, present in result.sections.items() %}
+
+    <div class="section-row">
+
+        <span>
+            {{ name }}
+        </span>
+
+        <span
+            class="{{ 'ok' if present else 'bad' }}"
+        >
+
+            {% if present %}
+                ✓ Present
+            {% else %}
+                ✗ Missing
+            {% endif %}
+
+        </span>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+
+
+<!-- ================= RECOMMENDATIONS ================= -->
+
+<div class="card">
+
+    <h2>
+        💡 Personalized Recommendations
+    </h2>
+
+    <p
+        class="muted"
+        style="margin-top:7px"
+    >
+        Suggestions to improve your resume for the selected role.
+    </p>
+
+
+    {% if result.suggestions %}
+
+    <ul>
+
+        {% for item in result.suggestions %}
+
+        <li>
+            {{ item }}
+        </li>
+
+        {% endfor %}
+
+    </ul>
+
+    {% else %}
+
+    <div class="recommendation">
+
+        🎉 Your resume looks strong for the selected role.
+        Keep your skills and projects updated.
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+
+<!-- ================= ANALYZE AGAIN ================= -->
+
+<div class="card">
+
+    <div class="recommendation">
+
+        🔄 <strong>Want to analyze another resume?</strong>
+
+        <p style="margin-top:7px">
+
+            Simply upload another resume or replace
+            the text above and click
+            <strong>Analyze Resume</strong>.
+
+        </p>
+
+    </div>
+
+</div>
+
+
 {% endif %}
+
+
 </main>
 
-<footer class="footer">AI Resume Analyzer Pro • Built with Python & Flask</footer>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <strong>
+        AI Resume Analyzer Pro
+    </strong>
+
+    <br>
+
+    Built with Python • Flask • HTML5 • CSS3
+
+    <br><br>
+
+    © 2026 AI Resume Analyzer Pro
+
+</footer>
+
+
 </body>
+
 </html>
