@@ -1,191 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Resume Analyzer</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
-            color: #1f2937;
-            min-height: 100vh;
-        }
-
-        .header {
-            background: #111827;
-            color: white;
-            padding: 25px 20px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 32px;
-            margin-bottom: 8px;
-        }
-
-        .header p {
-            color: #d1d5db;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        textarea {
-            width: 100%;
-            min-height: 250px;
-            padding: 15px;
-            border: 1px solid #d1d5db;
-            border-radius: 10px;
-            resize: vertical;
-            font-size: 16px;
-            margin-top: 15px;
-        }
-
-        button {
-            margin-top: 20px;
-            width: 100%;
-            padding: 14px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 17px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #1d4ed8;
-        }
-
-        .result {
-            margin-top: 30px;
-            padding: 25px;
-            background: #f8fafc;
-            border-radius: 12px;
-        }
-
-        .score {
-            font-size: 40px;
-            font-weight: bold;
-            margin: 15px 0;
-        }
-
-        .skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .skill {
-            background: #dbeafe;
-            color: #1e40af;
-            padding: 8px 12px;
-            border-radius: 20px;
-        }
-
-        .recommendation {
-            margin-top: 20px;
-            padding: 15px;
-            background: #ecfdf5;
-            border-radius: 10px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 25px;
-            color: #6b7280;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Resume Analyzer Pro</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,Arial,sans-serif;background:#f4f7fb;color:#172033;min-height:100vh}
+.header{background:linear-gradient(135deg,#111827,#243b63);color:white;padding:42px 20px;text-align:center}
+.header h1{font-size:clamp(28px,5vw,44px);margin-bottom:10px}.header p{color:#d8e0ee}
+.container{max-width:1050px;margin:30px auto;padding:0 18px}
+.card{background:#fff;padding:28px;border-radius:18px;box-shadow:0 8px 30px rgba(20,30,50,.08);margin-bottom:22px}
+label{display:block;font-weight:700;margin:0 0 8px}
+select,textarea,input[type=file]{width:100%;padding:13px;border:1px solid #d7deea;border-radius:10px;font-size:15px;margin-bottom:16px}
+textarea{min-height:230px;resize:vertical}
+button{width:100%;padding:14px;border:0;border-radius:10px;background:#2563eb;color:#fff;font-size:17px;font-weight:700;cursor:pointer}
+button:hover{background:#1d4ed8}
+.upload{border:2px dashed #b9c7df;padding:18px;border-radius:12px;text-align:center;margin-bottom:18px;background:#f8fafc}
+.error{padding:14px;background:#fee2e2;color:#991b1b;border-radius:10px;margin-bottom:20px}
+.result-head{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.score{width:135px;height:135px;border-radius:50%;display:grid;place-items:center;background:#eff6ff;border:10px solid #2563eb;color:#1d4ed8;font-size:34px;font-weight:800}
+.verdict{font-size:26px;font-weight:800}.muted{color:#64748b}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:22px}
+.metric{padding:18px;border:1px solid #e5eaf2;border-radius:13px}
+.metric strong{font-size:25px;display:block;margin-top:5px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.tag{padding:8px 12px;border-radius:20px;background:#dbeafe;color:#1e40af;font-weight:700;font-size:14px}
+.tag.missing{background:#fee2e2;color:#991b1b}
+ul{padding-left:20px;margin-top:12px}li{margin:9px 0}
+.section-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #edf0f5}
+.ok{color:#15803d;font-weight:700}.bad{color:#b91c1c;font-weight:700}
+.footer{text-align:center;padding:25px;color:#64748b}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.card{padding:20px}.header{padding:32px 15px}.score{width:110px;height:110px;font-size:28px}}
+</style>
 </head>
-
 <body>
+<header class="header">
+<h1>🤖 AI Resume Analyzer Pro</h1>
+<p>ATS compatibility • Skill gap analysis • Career recommendations</p>
+</header>
 
-    <div class="header">
-        <h1>🤖 AI Resume Analyzer</h1>
-        <p>Analyze your resume and improve your ATS compatibility</p>
-    </div>
+<main class="container">
+<div class="card">
+<h2>Analyze Your Resume</h2>
+<p class="muted" style="margin:8px 0 20px">Choose a target role and paste your resume or upload a PDF/DOCX/TXT file.</p>
 
-    <div class="container">
+{% if error %}<div class="error">{{ error }}</div>{% endif %}
 
-        <div class="card">
+<form method="POST" enctype="multipart/form-data">
+<label for="role">Target Job Role</label>
+<select name="role" id="role">
+{% for r in ["Data Analyst","Web Developer","Python Developer","Software Developer","ML Engineer"] %}
+<option value="{{r}}" {% if result and result.role==r %}selected{% endif %}>{{r}}</option>
+{% endfor %}
+</select>
 
-            <h2>Resume Analysis</h2>
-            <p style="margin-top: 8px;">
-                Paste your resume text below to analyze your technical skills.
-            </p>
+<div class="upload">
+<label for="resume_file">📄 Upload Resume</label>
+<input type="file" id="resume_file" name="resume_file" accept=".pdf,.docx,.txt">
+<small class="muted">PDF, DOCX or TXT</small>
+</div>
 
-            <form method="POST">
+<label for="resume_text">Or Paste Resume Text</label>
+<textarea id="resume_text" name="resume_text" placeholder="Paste your complete resume here...">{{ resume_text }}</textarea>
+<button type="submit">🚀 Analyze Resume</button>
+</form>
+</div>
 
-                <textarea
-                    name="resume_text"
-                    placeholder="Paste your resume text here..."
-                    required></textarea>
+{% if result %}
+<div class="card">
+<div class="result-head">
+<div class="score">{{ result.ats_score }}%</div>
+<div>
+<div class="verdict">{{ result.verdict }}</div>
+<p class="muted">ATS-style score for <strong>{{ result.role }}</strong></p>
+<p class="muted">{{ result.word_count }} words analyzed</p>
+</div>
+</div>
 
-                <button type="submit">
-                    Analyze Resume 🚀
-                </button>
+<div class="grid">
+<div class="metric">Role Match<strong>{{ result.role_score }}%</strong></div>
+<div class="metric">Overall Skill Coverage<strong>{{ result.skill_score }}%</strong></div>
+</div>
+</div>
 
-            </form>
+<div class="card">
+<h2>🎯 Role Skill Analysis</h2>
+<p class="muted" style="margin-top:7px">Skills matched to your selected career role.</p>
+<h3 style="margin-top:20px">Matched Skills</h3>
+<div class="tags">
+{% for skill in result.matched %}<span class="tag">✓ {{ skill }}</span>{% else %}<span class="muted">No target skills detected yet.</span>{% endfor %}
+</div>
+<h3 style="margin-top:20px">Missing / Recommended Skills</h3>
+<div class="tags">
+{% for skill in result.missing %}<span class="tag missing">+ {{ skill }}</span>{% else %}<span class="tag">Great coverage!</span>{% endfor %}
+</div>
+</div>
 
-            {% if result %}
+<div class="card">
+<h2>🧠 Detected Technical Skills</h2>
+<div class="tags">
+{% for skill in result.skills %}<span class="tag">{{ skill }}</span>{% else %}<span class="muted">No supported technical skills detected.</span>{% endfor %}
+</div>
+</div>
 
-            <div class="result">
+<div class="card">
+<h2>📋 Resume Section Check</h2>
+{% for name, present in result.sections.items() %}
+<div class="section-row"><span>{{ name }}</span><span class="{{ 'ok' if present else 'bad' }}">{{ '✓ Present' if present else '✗ Missing' }}</span></div>
+{% endfor %}
+</div>
 
-                <h2>Analysis Result</h2>
+<div class="card">
+<h2>💡 Personalized Recommendations</h2>
+<ul>
+{% for item in result.suggestions %}<li>{{ item }}</li>{% endfor %}
+</ul>
+</div>
+{% endif %}
+</main>
 
-                <div class="score">
-                    ATS Skill Score: {{ result.score }}%
-                </div>
-
-                <h3>Detected Skills</h3>
-
-                <div class="skills">
-                    {% if result.skills %}
-                        {% for skill in result.skills %}
-                            <span class="skill">{{ skill }}</span>
-                        {% endfor %}
-                    {% else %}
-                        <p>No matching skills detected.</p>
-                    {% endif %}
-                </div>
-
-                <div class="recommendation">
-                    <strong>💡 Recommendation:</strong>
-                    <p style="margin-top: 8px;">
-                        {{ result.recommendation }}
-                    </p>
-                </div>
-
-            </div>
-
-            {% endif %}
-
-        </div>
-
-    </div>
-
-    <footer>
-        AI Resume Analyzer | Built with Python & Flask
-    </footer>
-
+<footer class="footer">AI Resume Analyzer Pro • Built with Python & Flask</footer>
 </body>
 </html>
